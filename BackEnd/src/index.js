@@ -1,26 +1,20 @@
-const PORT = process.env.PORT || 3000;
-const GameManager = require('./GameManager');
-const cors = require('cors');
 const express = require('express');
+const http = require('http');
+const ws = require('ws');
+const url = require('url');
+const GameManager = require('./GameManager');
 
-const app = express();
+const PORT = process.env.PORT || 3000;
 const gm = new GameManager();
+const server = http.createServer( express() );
 
-app.use(express.json());
-app.use(cors());
+server.on('upgrade', (req, socket, head) => {
+	const pathname = url.parse(request.url).pathname;
+	if (pathname === '/new-game') {
+		gm.newGame(req, socket, head);
+	} else if (gm.checkCode(pathname)) {
+		gm.join(pathname, req, socket, head)
+	} else {
 
-app.post('/new-game', (req, res) => {
-	res.send(gm.newGame(req.body));
-});
-
-app.post('/join', (req, res) => {
-	res.send(gm.join(req.body));
-});
-
-app.post('/move', (req, res) => {
-	res.send(gm.move(req.body));
-});
-
-app.listen(PORT, () => {
-	console.log(`Our app is running on port ${ PORT }`);
+	}
 });

@@ -1,12 +1,6 @@
-const Game = require('./Game');
-
 class GameManager {
 	constructor() {
-		this.games = [];
-	}
-
-	findGameIndex(code) {
-		return this.games.findIndex(game => game.getCode() === code);
+		this.games = new Map();
 	}
 
 	generateCode() {
@@ -17,61 +11,20 @@ class GameManager {
 			for (let i = 0; i < 5; i++) {
 				code += chars[Math.floor(chars.length * Math.random())];
 			}
-		} while (this.findGameIndex(code) !== -1)
+		} while (this.games.get(code) !== undefined);
 		return code;
 	}
 
-	newGame(data) {
-		if (!data.ip) {
-			return "No valid IP address was supplied."
+	checkCode(code) {
+		if (!(/[A-Z][A-Z][A-Z][A-Z][A-Z]/g.test(code) && code.length === 5)) {
+			return false;
 		}
-		const gameData = {
-			ip: data.ip,
-			code: this.generateCode()
-		}
-		this.games.push(new Game(gameData));
-		return `Game successfully started with code: ${gameData.code}`;
+		return this.games.get(code) !== undefined;
 	}
 
-	join(data) {
-		if (!data.code) {
-			return "No code was supplied."
-		}
-		if (!data.ip) {
-			return "No valid IP address was supplied."
-		}
-		const gameIndex = this.findGameIndex(data.code);
-		if (gameIndex === -1) {
-			return `No game exists with code: ${data.code}`;
-		} else {
-			if (this.games[gameIndex].join(data.ip)) {
-				return `Successfully joined game with code: ${data.code}`;
-			} else {
-				return `Game has already started.`;
-			}
-		}
-	}
+	newGame() {}
 
-	move(data) {
-		if (!data.code) {
-			return "No code was supplied."
-		}
-		if (!data.start || !data.end) {
-			return "Invalid move.";
-		}
-		const gameIndex = this.findGameIndex(data.code);
-		if (gameIndex === -1) {
-			return `No game exists with code: ${data.code}`;
-		}
-		if (this.games[gameIndex].move({
-			start: data.start,
-			end: data.end
-		})) {
-			return "Legal move.";
-		} else {
-			return "Illegal move."
-		}
-	}
+	join(code) {}
 }
 
 module.exports = GameManager;

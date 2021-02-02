@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/Sander-Zeeman/TinyChess#readme",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "url": "^0.11.0",
+    "ws": "^7.4.2"
   },
   "engines": {
     "node": "v14.15.1"
